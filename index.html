@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Page</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            background-image: url('img/prof.jpg');
+            background-size: cover;
+            background-position: center;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: auto;
+            overflow-y: auto;
+            position: relative;
+        }
+        .background-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            z-index: -1;
+        }
+        .profile {
+            text-align: center;
+            margin-top: 50px; /* Increased margin for the header */
+        }
+        .profile-picture {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 4px solid #fff;
+            object-fit: cover;
+            object-position: top;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+        h2 {
+            color: #ffcc00;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+        }
+        .view-more {
+            margin-top: 30px;
+            margin-bottom: 50px; /* Added margin for the footer */
+        }
+        .view-more button {
+            background-color: #ffcc00;
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+        .view-more button:hover {
+            background-color: #e6b800;
+        }
+        .sidebar {
+            display: none;
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 300px;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 20px;
+            overflow-y: auto;
+            box-shadow: -4px 0 8px rgba(0, 0, 0, 0.5);
+            text-align: center;
+        }
+        .sidebar h3 {
+            margin-top: 0;
+            color: #ffcc00;
+        }
+        .sidebar.active {
+            display: block;
+            animation: slideIn 0.5s ease-out;
+        }
+        .sidebar .profile-picture {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 10px;
+        }
+        .sidebar p {
+            line-height: 1.6;
+        }
+        .sidebar .contact-form {
+            margin-top: 20px;
+        }
+        .sidebar .contact-form input,
+        .sidebar .contact-form textarea {
+            width: 90%;
+            padding: 10px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 5px;
+        }
+        .sidebar .contact-form button {
+            background-color: #ffcc00;
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+        .sidebar .contact-form button:hover {
+            background-color: #e6b800;
+        }
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        .sidebar .social-icons {
+            margin-top: 20px;
+        }
+        .sidebar .social-icons a {
+            color: #ffcc00;
+            margin: 0 10px;
+            font-size: 20px;
+            text-decoration: none;
+        }
+        .sidebar .social-icons a:hover {
+            color: #e6b800;
+        }
+        .experiences {
+            text-align: center;
+            margin-top: 30px;
+            color: #fff;
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            max-width: 600px;
+        }
+        .experiences h3 {
+            color: #ffcc00;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+            margin-bottom: 15px;
+        }
+        .experiences p {
+            margin: 10px 0;
+            line-height: 1.6;
+            font-size: 16px;
+            color: #ddd;
+        }
+        .experiences p strong {
+            color: #ffcc00;
+        }
+        .website-development {
+            text-align: center;
+            margin-top: 30px;
+            color: #fff;
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            max-width: 800px;
+        }
+        .website-development h3 {
+            color: #ffcc00;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+            margin-bottom: 15px;
+        }
+        .website-development .projects {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+        .website-development .project {
+            width: 200px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        .website-development .project img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+        .website-development .project img:hover {
+            transform: scale(1.1);
+        }
+        .website-development .project p {
+            margin: 10px;
+            color: #ddd;
+            font-size: 14px;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        .website-development .project-images {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .data-analysis {
+            text-align: center;
+            margin-top: 30px;
+            color: #fff;
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            max-width: 800px;
+        }
+        .data-analysis h3 {
+            color: #ffcc00;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+            margin-bottom: 15px;
+        }
+        .data-analysis table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        .data-analysis table th,
+        .data-analysis table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+            color: #ddd;
+        }
+        .data-analysis table th {
+            background-color: #ffcc00;
+            color: #000;
+        }
+        .data-analysis table tr:nth-child(even) {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        .personal-portfolio {
+            text-align: center;
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: #fff;
+            width: 100%;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        .personal-portfolio h1 {
+            color: #ffcc00;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+            margin: 0;
+        }
+        .personal-portfolio p {
+            margin: 5px 0 0;
+            font-size: 16px;
+            color: #ddd;
+        }
+        .menu-icon {
+            display: none; /* Hide the menu icon */
+        }
+        .social-icons-profile {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+            padding: 10px;
+            background-color: rgba(0, 0, 0, 0.8);
+            border: 2px solid #ffcc00;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+        .social-icons-profile a {
+            color: #ffcc00;
+            font-size: 20px;
+            text-decoration: none;
+            transition: transform 0.3s ease, color 0.3s ease;
+        }
+        .social-icons-profile a:hover {
+            color: #e6b800;
+            transform: scale(1.2);
+        }
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: #fff;
+            border-top: 2px solid #ffcc00;
+            width: 100%; /* Full width for the footer */
+            position: relative;
+        }
+        footer p {
+            margin: 0;
+            font-size: 14px;
+        }
+        footer a {
+            color: #ffcc00;
+            text-decoration: none;
+        }
+        footer a:hover {
+            color: #e6b800;
+        }
+        .background-icons {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            overflow: hidden;
+        }
+        .background-icons i {
+            position: absolute;
+            font-size: 30px;
+            color: rgba(255, 255, 255, 0.1);
+            animation: float 10s infinite ease-in-out;
+        }
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+        .hire-experts-form {
+            display: none;
+            text-align: center;
+            margin-top: 30px;
+            color: #fff;
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            max-width: 600px;
+        }
+        .hire-experts-form input,
+        .hire-experts-form textarea,
+        .hire-experts-form button {
+            width: 90%;
+            margin: 10px 0;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+        }
+        .hire-experts-form button {
+            background-color: #ffcc00;
+            color: #000;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+        .hire-experts-form button:hover {
+            background-color: #e6b800;
+        }
+        .hire-experts-popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(0, 0, 0, 0.9);
+            color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            width: 90%;
+            max-width: 500px;
+        }
+        .hire-experts-popup input,
+        .hire-experts-popup textarea,
+        .hire-experts-popup select,
+        .hire-experts-popup button {
+            width: 100%;
+            margin: 10px 0;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+        }
+        .hire-experts-popup button {
+            background-color: #ffcc00;
+            color: #000;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+        .hire-experts-popup button:hover {
+            background-color: #e6b800;
+        }
+        .hire-experts-popup .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            color: #ffcc00;
+            font-size: 20px;
+            cursor: pointer;
+        }
+        .hire-experts-popup .close-btn:hover {
+            color: #e6b800;
+        }
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            z-index: 999;
+        }
+        .subscriptions-popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(0, 0, 0, 0.9);
+            color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            width: 90%;
+            max-width: 500px;
+        }
+        .subscriptions-popup input,
+        .subscriptions-popup button {
+            width: 100%;
+            margin: 10px 0;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+        }
+        .subscriptions-popup button {
+            background-color: #ffcc00;
+            color: #000;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+        .subscriptions-popup button:hover {
+            background-color: #e6b800;
+        }
+        .subscriptions-popup .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            color: #ffcc00;
+            font-size: 20px;
+            cursor: pointer;
+        }
+        .subscriptions-popup .close-btn:hover {
+            color: #e6b800;
+        }
+    </style>
+</head>
+<body>
+    <div class="personal-portfolio">
+        <h1>Quasi Leo</h1>
+        <p>Full-Stack Developer | Data Analyst | Tech Enthusiast</p>
+    </div>
+    <div class="background-overlay"></div>
+    <div class="background-icons">
+        <i class="fab fa-facebook" style="top: 10%; left: 20%;"></i>
+        <i class="fab fa-twitter" style="top: 30%; left: 50%;"></i>
+        <i class="fab fa-linkedin" style="top: 50%; left: 70%;"></i>
+        <i class="fab fa-github" style="top: 70%; left: 30%;"></i>
+        <i class="fas fa-code" style="top: 20%; left: 80%;"></i>
+        <i class="fas fa-database" style="top: 60%; left: 10%;"></i>
+    </div>
+    <div class="profile">
+        <img src="img/leo.jpg" alt="Profile Picture" class="profile-picture">
+        <h2>Quasi Leo</h2>
+        <div class="social-icons-profile">
+            <a href="#"><i class="fab fa-facebook"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-linkedin"></i></a>
+            <a href="#"><i class="fab fa-github"></i></a>
+        </div>
+    </div>
+    <div class="experiences">
+        <h3>Experiences</h3>
+        <p><strong>Qualifications:</strong> BSc in Computer Science, MSc in Data Science</p>
+        <p><strong>Training:</strong> Certified in Full-Stack Development, Cloud Computing</p>
+        <p><strong>Work Experience:</strong> 5+ years in software development and project management</p>
+    </div>
+    <div class="website-development">
+        <h3>Website Development</h3>
+        <div class="projects">
+            <div class="project">
+                <div class="project-images">
+                    <img src="img/Screenshot (23).png" alt="Project 1 - Image 1">
+                    <img src="img/Screenshot (24).png" alt="Project 1 - Image 2">
+                </div>
+                <p>E-commerce Website</p>
+            </div>
+            <div class="project">
+                <div class="project-images">
+                    <img src="img/portfolio code.jpeg" alt="Project 2 - Image 1">
+                    <img src="img/portfolio.jpeg" alt="Project 2 - Image 2">
+                </div>
+                <p>Portfolio Website</p>
+            </div>
+            <div class="project">
+                <div class="project-images">
+                    <img src="img/ecom.jpeg" alt="Project 3 - Image 1">
+                    <img src="img/portfolio code.jpeg" alt="Project 3 - Image 2">
+                </div>
+                <p>Blog Platform</p>
+            </div>
+        </div>
+    </div>
+    <div class="data-analysis">
+        <h3>Data Analysis Table</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Project</th>
+                    <th>Data Type</th>
+                    <th>Tools Used</th>
+                    <th>Outcome</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>E-commerce Website</td>
+                    <td>Sales Data</td>
+                    <td>Excel, Power BI</td>
+                    <td>Increased Sales by 20%</td>
+                </tr>
+                <tr>
+                    <td>Portfolio Website</td>
+                    <td>Visitor Analytics</td>
+                    <td>Google Analytics</td>
+                    <td>Improved User Engagement</td>
+                </tr>
+                <tr>
+                    <td>Blog Platform</td>
+                    <td>Content Performance</td>
+                    <td>Python, Tableau</td>
+                    <td>Optimized Content Strategy</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="view-more">
+        <button onclick="toggleHireExpertsPopup()">Hire Experts</button>
+        <button onclick="toggleSubscriptionsPopup()">Subscribe</button>
+    </div>
+    <div class="overlay" id="popup-overlay" onclick="toggleHireExpertsPopup()"></div>
+    <div class="hire-experts-popup" id="hire-experts-popup">
+        <button class="close-btn" onclick="toggleHireExpertsPopup()">&times;</button>
+        <h3>Hire Experts</h3>
+        <form>
+            <input type="text" placeholder="Your Name" required>
+            <input type="email" placeholder="Your Email" required>
+            <input type="text" placeholder="Project Title" required>
+            <select id="project-type" onchange="handleProjectTypeChange()" required>
+                <option value="" disabled selected>Select Project Type</option>
+                <option value="Portfolio">Portfolio</option>
+                <option value="School">Project for School (Tertiary)</option>
+                <option value="Ecommerce">E-commerce Website</option>
+                <option value="CodeOnly">Code Only</option>
+                <option value="CV">CV</option>
+                <option value="Other">Other</option>
+            </select>
+            <input type="text" id="other-project-type" placeholder="Specify Other Project Type" style="display: none;">
+            <textarea placeholder="Project Description" rows="4" required></textarea>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+    <div class="subscriptions-popup" id="subscriptions-popup">
+        <button class="close-btn" onclick="toggleSubscriptionsPopup()">&times;</button>
+        <h3>Subscribe to Our Newsletter</h3>
+        <form>
+            <input type="text" placeholder="Your Name" required>
+            <input type="email" placeholder="Your Email" required>
+            <button type="submit">Subscribe</button>
+        </form>
+    </div>
+    <div class="sidebar" id="sidebar">
+        <img src="img/leo.jpg" alt="Profile Picture" class="profile-picture">
+        <h3>More About Me</h3>
+        <p><i class="fas fa-user"></i> Quasi Leo</p>
+        <p><i class="fas fa-phone"></i> 0533366793</p>
+        <p><i class="fas fa-envelope"></i> leo@priorityconsult.com</p>
+        <div class="contact-form">
+            <h4>Contact Me</h4>
+            <input type="text" placeholder="Your Name" required>
+            <input type="email" placeholder="Your Email" required>
+            <textarea placeholder="Your Message" rows="4" required></textarea>
+            <button type="submit">Send</button>
+        </div>
+        <div class="social-icons">
+            <a href="#"><i class="fab fa-facebook"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-linkedin"></i></a>
+            <a href="#"><i class="fab fa-github"></i></a>
+        </div>
+    </div>
+    <div class="sidebar" id="projects-sidebar">
+        <h3>My Projects</h3>
+        <p>Project 1: E-commerce Website</p>
+        <p>Project 2: Mobile App for Task Management</p>
+        <p>Project 3: AI Chatbot for Customer Support</p>
+    </div>
+    <script>
+        function toggleHireExpertsPopup() {
+            const popup = document.getElementById('hire-experts-popup');
+            const overlay = document.getElementById('popup-overlay');
+            const isVisible = popup.style.display === 'block';
+            popup.style.display = isVisible ? 'none' : 'block';
+            overlay.style.display = isVisible ? 'none' : 'block';
+        }
+
+        function handleProjectTypeChange() {
+            const projectType = document.getElementById('project-type').value;
+            const otherField = document.getElementById('other-project-type');
+            otherField.style.display = projectType === 'Other' ? 'block' : 'none';
+        }
+
+        function toggleSubscriptionsPopup() {
+            const popup = document.getElementById('subscriptions-popup');
+            const isVisible = popup.style.display === 'block';
+            popup.style.display = isVisible ? 'none' : 'block';
+        }
+    </script>
+    <footer>
+        <p>&copy; 2023 Quasi Leo. All rights reserved. | <a href="#">Privacy Policy</a></p>
+    </footer>
+</body>
+</html>
